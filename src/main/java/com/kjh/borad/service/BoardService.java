@@ -1,9 +1,13 @@
 package com.kjh.borad.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.kjh.borad.domain.dto.BoardPostRequest;
 import com.kjh.borad.domain.dto.BoardPostResponse;
+import com.kjh.borad.domain.dto.ListPostResponse;
 import com.kjh.borad.domain.entity.Board;
 import com.kjh.borad.repository.BoardRepository;
 
@@ -22,5 +26,9 @@ public class BoardService {
 		Board board = boardRepository.save(BoardPostRequest.toEntity(request));
 		log.info("board ={}", board.getBoardId());
 		return BoardPostResponse.fromEntity(board);
+	}
+
+	public Page<ListPostResponse> getListPost(Pageable pageable) {
+		return boardRepository.findAll(pageable).map(ListPostResponse::of);
 	}
 }
