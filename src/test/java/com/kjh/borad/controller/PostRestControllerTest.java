@@ -15,10 +15,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kjh.borad.domain.dto.BoardPostRequest;
 import com.kjh.borad.domain.dto.BoardPostResponse;
-import com.kjh.borad.service.BoardService;
+import com.kjh.borad.service.PostService;
 
-@WebMvcTest(BoardController.class)
-class BoardControllerTest {
+@WebMvcTest(PostRestController.class)
+class PostRestControllerTest {
 
 	@Autowired
 	MockMvc mockMvc;
@@ -27,7 +27,7 @@ class BoardControllerTest {
 	ObjectMapper objectMapper;
 
 	@MockBean
-	BoardService boardService;
+	PostService postService;
 
 	@Test
 	void post_success() throws Exception {
@@ -37,17 +37,17 @@ class BoardControllerTest {
 			.build();
 
 		BoardPostResponse response = BoardPostResponse.builder()
-			.boardId(1L)
+			.postId(1L)
 			.title("제목")
 			.build();
 
-		given(boardService.posting(any())).willReturn(response);
+		given(postService.posting(any())).willReturn(response);
 
 		mockMvc.perform(post("/api/v1/board/post")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsBytes(request)))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.boardId").value(1))
+			.andExpect(jsonPath("$.postId").value(1))
 			.andExpect(jsonPath("$.title").value("제목"))
 			.andDo(print());
 	}

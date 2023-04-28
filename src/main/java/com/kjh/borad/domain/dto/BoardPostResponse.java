@@ -1,6 +1,6 @@
 package com.kjh.borad.domain.dto;
 
-import com.kjh.borad.domain.entity.Board;
+import com.kjh.borad.domain.entity.Post;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 @Builder
 public class BoardPostResponse {
 
-	private Long boardId;
+	private Long postId;
 	private String title;
 
-	public static BoardPostResponse fromEntity(Board board) {
+	public static BoardPostResponse fromEntity(Post board) {
 		return BoardPostResponse.builder()
-			.boardId(board.getBoardId())
+			.postId(board.getPostId())
 			.title(board.getTitle())
 			.build();
 	}

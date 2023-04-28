@@ -2,7 +2,7 @@ package com.kjh.borad.domain.dto;
 
 import java.time.LocalDateTime;
 
-import com.kjh.borad.domain.entity.Board;
+import com.kjh.borad.domain.entity.Post;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,8 +18,8 @@ public class BoardPostRequest {
 	private String title;
 	private String content;
 
-	public static Board toEntity(BoardPostRequest request) {
-		return Board.builder()
+	public static Post toEntity(BoardPostRequest request) {
+		return Post.builder()
 			.title(request.getTitle())
 			.content(request.getContent())
 			.createdAt(LocalDateTime.now())
