@@ -5,12 +5,14 @@ import java.time.LocalDateTime;
 import com.kjh.borad.domain.entity.Board;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 public class BoardPostRequest {
 
 	private String title;
