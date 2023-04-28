@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.kjh.borad.domain.dto.BoardPostRequest;
 import com.kjh.borad.domain.dto.BoardPostResponse;
 import com.kjh.borad.domain.dto.ListPostResponse;
+import com.kjh.borad.domain.dto.ReadPostResponse;
 import com.kjh.borad.domain.entity.Board;
 import com.kjh.borad.repository.BoardRepository;
 
@@ -30,5 +31,13 @@ public class BoardService {
 
 	public Page<ListPostResponse> getListPost(Pageable pageable) {
 		return boardRepository.findAll(pageable).map(ListPostResponse::of);
+	}
+
+	public ReadPostResponse getReadPost(Long boardId) {
+		Board board = boardRepository.findById(boardId).orElseThrow(() -> {
+			throw new IllegalArgumentException();
+		});
+
+		return ReadPostResponse.fromEntity(board);
 	}
 }
