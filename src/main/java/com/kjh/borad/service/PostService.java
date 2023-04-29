@@ -57,7 +57,7 @@ public class PostService {
 		return ReadPostResponse.fromEntity(post, new ArrayList<>());
 	}
 
-	private Map<Post, Double> getRelatedPosts(Post post, Set<String> excludedWords) {
+	public Map<Post, Double> getRelatedPosts(Post post, Set<String> excludedWords) {
 		List<Post> allPosts = postRepository.findAll();
 		Map<Post, Double> relatedPosts = new HashMap<>();
 
@@ -65,6 +65,7 @@ public class PostService {
 		Map<String, Integer> currentPostWordCnt = getWordCnt(post.getContent());
 
 		// 현재 게시물에서 제외 단어를 제외시켜야함.
+		currentPostWordCnt.keySet().removeAll(excludedWords);
 
 		// 남은 단어를 기준으로 현재 게시물을 제외한 다른 게시물과 연관도를 계산하여 추가.
 		// 연관도가 몇인지 계산해서 Map에 작성해야 해당 수치로 정렬할 수 있음.
@@ -72,7 +73,7 @@ public class PostService {
 		return relatedPosts;
 	}
 
-	private Map<String, Integer> getWordCnt(String content) {
+	public Map<String, Integer> getWordCnt(String content) {
 		Map<String, Integer> wordsCnt = new HashMap<>();
 		String[] words = content.toLowerCase().split("\\s+");
 
@@ -83,7 +84,7 @@ public class PostService {
 		return wordsCnt;
 	}
 
-	private Set<String> calculateExcludedWords() {
+	public Set<String> calculateExcludedWords() {
 		List<Post> posts = postRepository.findAll();
 		int postCnt = posts.size();
 
@@ -91,19 +92,28 @@ public class PostService {
 
 		// Count된 Words를 가중치 60%에 맞춰 60% 이상 단어들을 수집한다.
 		return wordCnt.entrySet().stream()
+			.peek(entry -> System.out.println(
+				"단어: " + entry.getKey() + ", 횟수: " + entry.getValue() + ", 가중치: " + (entry.getValue()
+					/ (double)postCnt)))
 			.filter(entry -> entry.getValue() / (double)postCnt >= FREQUENCY_THRESHOLD)
 			.map(Map.Entry::getKey)
 			.collect(Collectors.toSet());
 	}
 
-	private Map<String, Integer> countWordsInPosts(List<Post> posts) {
+	public Map<String, Integer> countWordsInPosts(List<Post> posts) {
 		Map<String, Integer> wordCnt = new HashMap<>();
 		for (Post post : posts) {
-			Set<String> words = new HashSet<>(Arrays.asList(post.getContent().toLowerCase().split("\\s")));
+			Set<String> words = new HashSet<>(
+				Arrays.asList(post.getContent().toLowerCase().replaceAll("[^a-zA-Z0-9가-힣\\s]", "").split("\\s+")));
 			for (String word : words) {
 				wordCnt.put(word, wordCnt.getOrDefault(word, 0) + 1);
 			}
 		}
+
+		for (String word : wordCnt.keySet()) {
+			System.out.println("단어 : " + word + "/ 값 : " + wordCnt.get(word));
+		}
+
 		return wordCnt;
 	}
 
