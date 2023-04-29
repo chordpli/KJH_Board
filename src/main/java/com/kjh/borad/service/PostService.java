@@ -52,8 +52,35 @@ public class PostService {
 		// 모든 게시물 내에서 제외해야하는 단어 수집.
 		Set<String> excludedWords = calculateExcludedWords();
 		// 연관 게시물 수집
+		Map<Post, Double> relatedPosts = getRelatedPosts(post, excludedWords);
 
 		return ReadPostResponse.fromEntity(post, new ArrayList<>());
+	}
+
+	private Map<Post, Double> getRelatedPosts(Post post, Set<String> excludedWords) {
+		List<Post> allPosts = postRepository.findAll();
+		Map<Post, Double> relatedPosts = new HashMap<>();
+
+		// 현재 게시물의 단어 갯수 체크
+		Map<String, Integer> currentPostWordCnt = getWordCnt(post.getContent());
+
+		// 현재 게시물에서 제외 단어를 제외시켜야함.
+
+		// 남은 단어를 기준으로 현재 게시물을 제외한 다른 게시물과 연관도를 계산하여 추가.
+		// 연관도가 몇인지 계산해서 Map에 작성해야 해당 수치로 정렬할 수 있음.
+
+		return relatedPosts;
+	}
+
+	private Map<String, Integer> getWordCnt(String content) {
+		Map<String, Integer> wordsCnt = new HashMap<>();
+		String[] words = content.toLowerCase().split("\\s+");
+
+		for (String word : words) {
+			wordsCnt.put(word, wordsCnt.getOrDefault(word, 0) + 1);
+		}
+
+		return wordsCnt;
 	}
 
 	private Set<String> calculateExcludedWords() {
