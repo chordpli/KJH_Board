@@ -1,6 +1,13 @@
 package com.kjh.borad.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,7 +48,36 @@ public class PostService {
 		Post post = postRepository.findById(postId).orElseThrow(() -> {
 			throw new RuntimeException();
 		});
+
+		// 모든 게시물 내에서 제외해야하는 단어 수집.
+		Set<String> excludedWords = calculateExcludedWords();
+		// 연관 게시물 수집
+
 		return ReadPostResponse.fromEntity(post, new ArrayList<>());
+	}
+
+	private Set<String> calculateExcludedWords() {
+		List<Post> posts = postRepository.findAll();
+		int postCnt = posts.size();
+
+		Map<String, Integer> wordCnt = countWordsInPosts(posts);
+
+		// Count된 Words를 가중치 60%에 맞춰 60% 이상 단어들을 수집한다.
+		return wordCnt.entrySet().stream()
+			.filter(entry -> entry.getValue() / (double)postCnt >= FREQUENCY_THRESHOLD)
+			.map(Map.Entry::getKey)
+			.collect(Collectors.toSet());
+	}
+
+	private Map<String, Integer> countWordsInPosts(List<Post> posts) {
+		Map<String, Integer> wordCnt = new HashMap<>();
+		for (Post post : posts) {
+			Set<String> words = new HashSet<>(Arrays.asList(post.getContent().toLowerCase().split("\\s")));
+			for (String word : words) {
+				wordCnt.put(word, wordCnt.getOrDefault(word, 0) + 1);
+			}
+		}
+		return wordCnt;
 	}
 
 }
