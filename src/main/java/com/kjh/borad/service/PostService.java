@@ -1,5 +1,7 @@
 package com.kjh.borad.service;
 
+import java.util.ArrayList;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,10 @@ public class PostService {
 
 	private final PostRepository postRepository;
 
+	private static final double FREQUENCY_THRESHOLD = 0.6;
+	private static final double RELATED_POST_THRESHOLD = 0.4;
+	private static final int MINIMUM_MATCHING_WORDS = 2;
+
 	public BoardPostResponse posting(BoardPostRequest request) {
 		Post post = postRepository.save(BoardPostRequest.toEntity(request));
 		log.info("board ={}", post.getPostId());
@@ -31,11 +37,11 @@ public class PostService {
 		return postRepository.findAll(pageable).map(ListPostResponse::of);
 	}
 
-	public ReadPostResponse getReadPost(Long boardId) {
-		Post post = postRepository.findById(boardId).orElseThrow(() -> {
-			throw new IllegalArgumentException();
+	public ReadPostResponse getReadPost(Long postId) {
+		Post post = postRepository.findById(postId).orElseThrow(() -> {
+			throw new RuntimeException();
 		});
-
-		return ReadPostResponse.fromEntity(post);
+		return ReadPostResponse.fromEntity(post, new ArrayList<>());
 	}
+
 }
