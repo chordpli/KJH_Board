@@ -67,5 +67,4 @@ class PostServiceTest {
 		Map<Post, Double> expectedRelatedPosts = Map.of(post2, 2.0, post3, 3.0);
 		assertEquals(expectedRelatedPosts, relatedPosts);
 	}
-
 }
