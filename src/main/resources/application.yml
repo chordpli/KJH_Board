@@ -17,3 +17,7 @@ spring:
     database: mysql
     hibernate:
       ddl-auto: update
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500, expireAfterAccess=3600s
