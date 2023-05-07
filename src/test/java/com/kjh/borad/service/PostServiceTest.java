@@ -43,7 +43,7 @@ class PostServiceTest {
 		post6 = new Post(6L, "Title6", "안녕하세요. 글로벌 널리지 과제 제출합니다.", LocalDateTime.now());
 		post7 = new Post(7L, "Title7", "안녕하세요. 사람인 글로벌 널리지 과제 제출합니다.", LocalDateTime.now());
 		post8 = new Post(8L, "Title8", "안녕하세요. 게시판 과제 제출합니다.", LocalDateTime.now());
-		post9 = new Post(9L, "Title9", "안녕하세요. 글로벌 널리지 첫번째 게시판 과페 입니다.", LocalDateTime.now());
+		post9 = new Post(9L, "Title9", "안녕하세요. 글로벌 널리지 첫번째 게시판 과제 입니다.", LocalDateTime.now());
 		post10 = new Post(10L, "Title10", "안녕하세요. 좋은 아침입니다. 잘 부탁드립니다.", LocalDateTime.now());
 		post11 = new Post(11L, "Title11", "글로벌 널리지 여러분 점심은 잘 드셨나요? 행복한 하루 되세요", LocalDateTime.now());
 		post12 = new Post(12L, "Title12", "오늘도 고생하셨습니다. 좋은 밤 되세요!", LocalDateTime.now());
